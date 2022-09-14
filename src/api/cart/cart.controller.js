@@ -105,7 +105,19 @@ module.exports.cartAdd = (req, res) => {
 };
 
 module.exports.getAllCart = (req, res) => {
-  res.status(200).json({ carts });
+  let pushObj = [];
+  var newPath = path.join(__dirname, "..", "json", "product.json");
+  fs.readFile(newPath, "utf8", function (err, data) {
+    var products = JSON.parse(data);
+    carts.forEach((carts_added) => {
+      products.forEach((products_added) => {
+        if (carts_added.productId === products_added.id) {
+          pushObj.push(products_added);
+        }
+      });
+    });
+    res.status(200).json({ pushObj });
+  });
 };
 
 module.exports.deleteProductFromCart = (req, res) => {
