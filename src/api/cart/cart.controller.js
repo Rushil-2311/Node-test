@@ -1,6 +1,8 @@
 const Cart = require("../../model/cart");
+var path = require("path");
 const carts = require("../json/cart.json");
 const fs = require("fs");
+var jsonPath = path.join(__dirname, "..", "json", "cart.json");
 
 module.exports.addProductToCart = (req, res) => {
   const { productId } = req.query;
@@ -79,35 +81,27 @@ module.exports.addProductToCart = (req, res) => {
 
 module.exports.cartAdd = (req, res) => {
   const { productId } = req.query;
-  fs.readFile(
-    "/home/rushil/Desktop/node-test/src/api/json/cart.json",
-    "utf8",
-    function (err, data) {
-      var obj = JSON.parse(data);
-      let filterproduct = obj.filter((data) => data.productId === productId);
-      if (!filterproduct.length) {
-        obj.push({
-          productId,
-          quantity: 1,
-        });
-      } else {
-        obj.forEach((doc) => {
-          if (doc.productId === productId) {
-            doc["quantity"] = doc.quantity + 1;
-          }
-        });
-      }
-      var strNotes = JSON.stringify(obj);
-      fs.writeFile(
-        "/home/rushil/Desktop/node-test/src/api/json/cart.json",
-        strNotes,
-        function (err) {
-          if (err) return res.status(400).json({ err });
-          res.status(200).json({ obj });
+  fs.readFile(jsonPath, "utf8", function (err, data) {
+    var obj = JSON.parse(data);
+    let filterproduct = obj.filter((data) => data.productId === productId);
+    if (!filterproduct.length) {
+      obj.push({
+        productId,
+        quantity: 1,
+      });
+    } else {
+      obj.forEach((doc) => {
+        if (doc.productId === productId) {
+          doc["quantity"] = doc.quantity + 1;
         }
-      );
+      });
     }
-  );
+    var strNotes = JSON.stringify(obj);
+    fs.writeFile(jsonPath, strNotes, function (err) {
+      if (err) return res.status(400).json({ err });
+      res.status(200).json({ obj });
+    });
+  });
 };
 
 module.exports.getAllCart = (req, res) => {
@@ -116,57 +110,39 @@ module.exports.getAllCart = (req, res) => {
 
 module.exports.deleteProductFromCart = (req, res) => {
   const { productId } = req.query;
-  fs.readFile(
-    "/home/rushil/Desktop/node-test/src/api/json/cart.json",
-    "utf8",
-    function (err, data) {
-      var obj = JSON.parse(data);
-      let filterproduct = obj.filter((data) => data.productId !== productId);
-      var strNotes = JSON.stringify(filterproduct);
-      fs.writeFile(
-        "/home/rushil/Desktop/node-test/src/api/json/cart.json",
-        strNotes,
-        function (err) {
-          if (err) return res.status(400).json({ err });
-          res.status(200).json({ filterproduct });
-        }
-      );
-    }
-  );
+  fs.readFile(jsonPath, "utf8", function (err, data) {
+    var obj = JSON.parse(data);
+    let filterproduct = obj.filter((data) => data.productId !== productId);
+    var strNotes = JSON.stringify(filterproduct);
+    fs.writeFile(jsonPath, strNotes, function (err) {
+      if (err) return res.status(400).json({ err });
+      res.status(200).json({ filterproduct });
+    });
+  });
 };
 
 module.exports.decreseQuantityOfproduct = (req, res) => {
   const { productId } = req.query;
-  fs.readFile(
-    "/home/rushil/Desktop/node-test/src/api/json/cart.json",
-    "utf8",
-    function (err, data) {
-      var obj = JSON.parse(data);
-      let filterproduct = obj.filter((data) => data.productId === productId);
-      if (!filterproduct.length) {
-        return res
-          .status(400)
-          .json({ message: "don't added product till yet" });
-      } else {
-        obj.forEach((doc) => {
-          if (doc.productId === productId) {
-            if (doc.quantity <= 0) {
-              doc["quantity"] = 0;
-            } else {
-              doc["quantity"] = doc.quantity - 1;
-            }
+  fs.readFile(jsonPath, "utf8", function (err, data) {
+    var obj = JSON.parse(data);
+    let filterproduct = obj.filter((data) => data.productId === productId);
+    if (!filterproduct.length) {
+      return res.status(400).json({ message: "don't added product till yet" });
+    } else {
+      obj.forEach((doc) => {
+        if (doc.productId === productId) {
+          if (doc.quantity <= 0) {
+            doc["quantity"] = 0;
+          } else {
+            doc["quantity"] = doc.quantity - 1;
           }
-        });
-      }
-      var strNotes = JSON.stringify(obj);
-      fs.writeFile(
-        "/home/rushil/Desktop/node-test/src/api/json/cart.json",
-        strNotes,
-        function (err) {
-          if (err) return res.status(400).json({ err });
-          res.status(200).json({ obj });
         }
-      );
+      });
     }
-  );
+    var strNotes = JSON.stringify(obj);
+    fs.writeFile(jsonPath, strNotes, function (err) {
+      if (err) return res.status(400).json({ err });
+      res.status(200).json({ obj });
+    });
+  });
 };

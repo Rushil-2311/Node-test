@@ -6,7 +6,7 @@ const productController = require("./product.controller");
 router.route("/product/add").post(productController.addProduct);
 router.route("/product/create").post(productController.createProduct);
 router.route("/product/getAll").get(productController.getAllproduct);
-
+router.route("/product/test").get(productController.readJsonFile);
 /* Get Job*/
 // router.route('/').get(verifyAccessToken, productController.getJobs);
 
