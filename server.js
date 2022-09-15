@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const { MONGO_URL } = require("./src/helper/keys");
 const productRoutes = require("./src/api/product/product.routes");
 const cartRoutes = require("./src/api/cart/cart.routes");
-const PORT = process.env.PORT || 5009;
+const PORT = process.env.PORT || 7003;
 
 app.use(cors());
 app.use(express.json());
