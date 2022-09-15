@@ -83,6 +83,7 @@ module.exports.cartAdd = (req, res) => {
   const { productId } = req.query;
   fs.readFile(jsonPath, "utf8", function (err, data) {
     var obj = JSON.parse(data);
+    console.log(obj, "obj");
     let filterproduct = obj.filter((data) => data.productId === productId);
     if (!filterproduct.length) {
       obj.push({
@@ -91,6 +92,7 @@ module.exports.cartAdd = (req, res) => {
       });
     } else {
       obj.forEach((doc) => {
+        console.log(doc);
         if (doc.productId === productId) {
           doc["quantity"] = doc.quantity + 1;
         }
